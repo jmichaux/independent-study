@@ -32,18 +32,12 @@ $$
 &= \sum_{s'} \sum_{g'}g'\ p(g\' | s\', s)  p(s\' | s)  \\\\
 &= \sum_{s'} \sum_{g'} \frac{g'\ p(g\' | s\', s)  p(s\' | s) p(s)}{p(s)}  \\\\
 &= \sum_{s'} \sum_{g'} \frac{g'\ p(g\' | s\', s)  p(s'\, s)}{p(s)}  \\\\
-\end{align}
-$$
-
-
-$$
-\begin {align}
 &= \sum_{s'} \sum_{g'} \frac{g'\, p(g\', s\', s)}{p(s)}  \\\\
 &= \sum_{s'} \sum_{g'} g'\ p(g\', s\' | s)  \\\\
 &= \sum_{g'} \sum_{s'} g'\ p(g', s\' | s)  \\\\
 &= \sum_{g'} g'\ p(g\'| s)  \\\\
 &= \mathbb{E}\_\pi[g\' | s]
-= \mathbb{E}\_\pi[G\_{t+1} | S\_{t}]
+&= \mathbb{E}\_\pi[G\_{t+1} | S\_{t}]
 \end {align}
 $$
 
