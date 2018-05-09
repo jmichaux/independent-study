@@ -10,7 +10,7 @@ We will derive a more useful form for these value function equations below. But 
 #### Law of iterated expectations
 ***Theorem***
 
-$\mathbb{E}_\pi[G_t+1 | S_t = s'] = \mathbb{E}_\pi[G_t | S_t = s]$
+$\mathbb{E}_\pi[G_{t+1} | S_t = s'] = \mathbb{E}_\pi[G_t | S_t = s]$
 
 _Proof_: To keep the notation clean and easy to read we'll drop the subscripts, and denote the random variables $s=S_t$, $g'=G_{t+1}$, $s'=S_{t+1}$.
 
