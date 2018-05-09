@@ -27,8 +27,8 @@ Conditioning on $S_t = s$ and taking the expectation of the above expression we 
 
 $$
 \begin {align}
-\mathbb{E}\_{\pi}[\mathbb{E}\_\pi[G\_{t+1} | S\_{t+1}] \,|\,S_t ]
-&= \mathbb{E\}_{\pi}[\mathbb{E}\_\pi[g\' | s\'] \,|\,s ] \\\\
+\mathbb{E}\_{\pi}[\mathbb{E}\_\pi[G\_{t+1} | S\_{t+1}] | S_t ]
+&= \mathbb{E\}_{\pi}[\mathbb{E}\_\pi[g\' | s\'] |s ] \\\\
 \end{align}
 $$
 
