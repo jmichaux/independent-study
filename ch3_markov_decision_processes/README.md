@@ -29,6 +29,7 @@ $$
 \begin {align}
 \mathbb{E}\_{\pi}[\mathbb{E}\_\pi[G\_{t+1} | S\_{t+1}] | S_t ]
 &= \mathbb{E\}_{\pi}[\mathbb{E}\_\pi[g\' | s\'] |s ] \\\\
+&= \sum_{s'} \sum_{g'}g'\, p(g\' | s\', s) \, p(s\' | s)  \\\\
 \end{align}
 $$
 
