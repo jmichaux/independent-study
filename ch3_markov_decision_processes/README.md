@@ -5,7 +5,7 @@ $G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} +  \cdots = \sum_{k=0}^\infty
 * _state-value function_:  $v_{\pi}(s) = \mathbb{E}_\pi[G_t | S_t = s]$
 * _action-value function_: $q_{\pi}(s,a) = \mathbb{E}_\pi[G_t | S_t = s, A_t =a]$
 
-We will derive a more useful form for these value function equations below. But first, let's re-prove the well known [Law of Iterated Expectations]() using out notation for the expected return $G_{t+1}$.
+We will derive a more useful form for these value function equations below. But first, let's re-prove the well known [Law of Iterated Expectations](https://en.wikipedia.org/wiki/Law_of_total_expectation) using out notation for the expected return $G_{t+1}$.
 
 #### Law of iterated expectations
 ***Theorem***
