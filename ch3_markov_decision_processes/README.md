@@ -36,7 +36,7 @@ $$
 &= \sum_{s'} \sum_{g'} g'\ p(g\', s\' | s)  \\\\
 &= \sum_{g'} \sum_{s'} g'\ p(g\', s\' | s)  \\\\
 &= \sum_{g'} g'\ p(g\'| s)  \\\\
-&= \mathbb{E}\_\pi[g\' | s]
+&= \mathbb{E}\_\pi[g\' | s] \\\\
 &= \mathbb{E}\_\pi[G\_{t+1} | S\_{t}]
 \end {align}
 $$
