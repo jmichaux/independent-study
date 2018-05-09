@@ -18,7 +18,7 @@ _Proof_: To keep the notation clean and easy to read we'll drop the subscripts, 
 $$
 \begin{align}
 \mathbb{E}\_{\pi}[G\_{t+1} | S\_{t+1}] 
-&= \mathbb{E}\_{\pi}[g\' | s\'] <br/>
+&= \mathbb{E}\_{\pi}[g\' | s\'] \\\\
 &= \sum\_{g'}g\'p(g\' | s\')
 \end{align}
 $$
