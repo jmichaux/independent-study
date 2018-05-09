@@ -15,8 +15,7 @@ $\mathbb{E}_{\pi}[\mathbb{E}\_{\pi}[G\_{t+1} | S\_{t+1} = s\']|S\_t = s] = \math
 
 _Proof_: To keep the notation clean and easy to read we'll drop the subscripts, and denote the random variables $s=S_t$, $g'=G_{t+1}$, $s'=S_{t+1}$.
 
-$\mathbb{E}_\pi[G\_{t+1} | S\_{t+1}]
-= \mathbb{E}_\pi[g\' | s\']$
+$\mathbb{E}_\pi[G\_{t+1} | S\_{t+1}] = \mathbb{E}_\pi[g\' | s\']$
 
 $\mathbb{E}_\pi[G\_{t+1} | S\_{t+1}]
 &= \mathbb{E}_\pi[g\' | s\']$
