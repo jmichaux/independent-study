@@ -206,3 +206,57 @@ class ClassicGridEnv5x4Dynamic(ClassicGridEnv):
         2: [(1.0, 14, -1.0, False)],
         3: [(1.0, 13, -1.0, False)]
         }
+
+
+if __name__ =='__main__':
+    import pdb
+    from copy import deepcopy
+    from collections import defaultdict
+    from pprint import pprint
+    import sys
+    if "../" not in sys.path:
+        sys.path.append("../")
+
+    import numpy as np
+
+    def policy_evaluation(policy, env, discount_factor=1.0, theta=0.00001):
+        # Start with a random (all 0) value function
+        V = np.zeros(env.nS)
+        while True:
+            delta = 0
+            # For each state, perform a "full backup"
+            for s in range(env.nS):
+                v = 0
+                # Look at the possible next actions
+                for a, action_prob in enumerate(policy[s]):
+                    # For each action, look at the possible next states...
+                    for  prob, next_state, reward, done in env.P[s][a]:
+                        # Calculate the expected value
+                        v += action_prob * prob * (reward + discount_factor * V[next_state])
+                # How much our value function changed (across any states)
+                delta = max(delta, np.abs(v - V[s]))
+                V[s] = v
+            # Stop evaluating once our value function change is below a threshold
+            if delta < theta:
+                break
+        return np.array(V)
+
+    env = ClassicGridEnv3x4(nrew=-0.04)
+    optimal_3x4_policy = np.array([
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+
+        [0.0, 0.0, 0.0, 1.0],
+        [0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0],
+        [0.0, 0.0, 0.0, 1.0],
+
+        [0.0, 0.0, 0.0, 1.0],
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0],
+    ])
+    
+    print(policy_evaluation(optimal_3x4_policy, env, discount_factor=1.0).reshape((3,4)))
