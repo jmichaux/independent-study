@@ -83,11 +83,11 @@ class ClassicGridEnv(discrete.DiscreteEnv):
 
         # Empty dict of dict of lists for environment dynamics
         P = {s: {a : [] for a in range(nA)} for s in range(nS + 1)}
-        P[nS] = {
-            0:[0,0,0,0],
-            1:[0,0,0,0],
-            2:[0,0,0,0],
-            3:[0,0,0,0]
+        P[-1] = {
+            0:[1.0, -1, 0.0, True],
+            1:[1.0, -1, 0.0, True],
+            2:[1.0, -1, 0, True],
+            3:[1.0, -1, 0.0, True],
             }
 
         def to_s(row, col):
@@ -119,10 +119,10 @@ class ClassicGridEnv(discrete.DiscreteEnv):
                         li.append((1.0, s, 0, True))
                     # Goal state -> Terminal states
                     if letter == b'G':
-                        li.append((1.0, nS, 1, False))
+                        li.append((1.0, -1, 1, False))
                     # Hole state -> Terminal state
                     elif letter == b'H':
-                        li.append((1.0, nS, -1, False))
+                        li.append((1.0, -1, -1, False))
                     elif letter == b'X':
                         li.append((0.0, s, 0, False))
                     else:
