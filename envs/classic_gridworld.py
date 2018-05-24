@@ -11,6 +11,7 @@ DOWN = 1
 RIGHT = 2
 UP = 3
 
+
 MAPS = {
     "3x4": [
         "EEEG",
@@ -37,15 +38,16 @@ class ClassicGridEnv(discrete.DiscreteEnv):
     """
     Example Gridworld:
 
-        EEEG
-        EXEH
-        SEEE
+        EEEGT
+        EXEHT
+        SEEEX
 
     S : starting cell
-    E : empty cell
+    F : empty cell
     H : hole
     G : goal
     X : obstacle
+    T: terminal state
 
     The episode ends when the agent reaches a terminal state (goal or pit). The agent
     receives a reward when transitioning in the environment. See below for details.
@@ -80,7 +82,13 @@ class ClassicGridEnv(discrete.DiscreteEnv):
         isd /= isd.sum()
 
         # Empty dict of dict of lists for environment dynamics
-        P = {s: {a : [] for a in range(nA)} for s in range(nS)}
+        P = {s: {a : [] for a in range(nA)} for s in range(nS + 1)}
+        P[nS] = {
+            0:[0,0,0,0],
+            1:[0,0,0,0],
+            2:[0,0,0,0],
+            3:[0,0,0,0]
+            }
 
         def to_s(row, col):
             return row*ncol + col
@@ -106,10 +114,15 @@ class ClassicGridEnv(discrete.DiscreteEnv):
                 for a in range(nA):
                     li = P[s][a]
                     letter = desc[row, col]
+                    # Terminal state
+                    if letter == b'T':
+                        li.append((1.0, s, 0, True))
+                    # Goal state -> Terminal states
                     if letter == b'G':
-                        li.append((1.0, s, 0, True))
+                        li.append((1.0, nS, 1, False))
+                    # Hole state -> Terminal state
                     elif letter == b'H':
-                        li.append((1.0, s, 0, True))
+                        li.append((1.0, nS, -1, False))
                     elif letter == b'X':
                         li.append((0.0, s, 0, False))
                     else:
@@ -121,21 +134,8 @@ class ClassicGridEnv(discrete.DiscreteEnv):
                                     newrow, newcol = row, col
                                     newletter = desc[newrow, newcol]
                                 newstate = to_s(newrow, newcol)
-                                done = bytes(newletter) in b'GH'
+                                done = bytes(newletter) in b'T'
                                 rew = nrew
-                                # if done:
-                                #     rew = float(newletter == b'G') - float(newletter == b'H')
-                                # else:
-                                #     rew = nrew
-                                # rew = float(newletter == b'G') - float(newletter == b'H') + nrew * (float(newletter != b'G') * float(newletter != b'H'))
-                                # rew = -0.02
-                                # rew = float(newletter == b'G') - float(newletter == b'H') - 0.02
-                                #
-                                # if map_name == "3x4":
-                                #     rew = float(newletter == b'G') - float(newletter == b'H') + nrew * (float(newletter != b'G') * float(newletter != b'H'))
-                                #     # rew = nrew
-                                # else:
-                                #     rew = float(newletter == b'G') - 1
                                 li.append((0.8 if b == a else 0.1, newstate, rew, done))
                         else:
                             newrow, newcol = inc(row, col, a)
@@ -258,5 +258,5 @@ if __name__ =='__main__':
         [0.0, 0.0, 1.0, 0.0],
         [0.0, 0.0, 0.0, 1.0],
     ])
-    
+
     print(policy_evaluation(optimal_3x4_policy, env, discount_factor=1.0).reshape((3,4)))
