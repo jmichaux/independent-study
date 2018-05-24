@@ -1,16 +1,8 @@
-import numpy as np
-import sys
-from six import StringIO, b
-
-from gym import utils
-from gym.envs.toy_text import discrete
-
 # actions
 LEFT = 0
 DOWN = 1
 RIGHT = 2
 UP = 3
-
 
 MAPS = {
     "3x4": [
@@ -38,16 +30,15 @@ class ClassicGridEnv(discrete.DiscreteEnv):
     """
     Example Gridworld:
 
-        EEEGT
-        EXEHT
-        SEEEX
+        EEEG
+        EXEH
+        SEEE
 
     S : starting cell
-    F : empty cell
+    E : empty cell
     H : hole
     G : goal
     X : obstacle
-    T: terminal state
 
     The episode ends when the agent reaches a terminal state (goal or pit). The agent
     receives a reward when transitioning in the environment. See below for details.
@@ -76,19 +67,21 @@ class ClassicGridEnv(discrete.DiscreteEnv):
 
         nA = 4
         nS = nrow * ncol
+        nS+=1
 
         #initial state distribution
         isd = np.array(desc == b'S').astype('float64').ravel()
         isd /= isd.sum()
 
         # Empty dict of dict of lists for environment dynamics
-        P = {s: {a : [] for a in range(nA)} for s in range(nS + 1)}
-        P[nS] = {
-            0:[0,0,0,0],
-            1:[0,0,0,0],
-            2:[0,0,0,0],
-            3:[0,0,0,0]
-            }
+        P = {s: {a : [] for a in range(nA)} for s in range(nS)}
+        # Terminal state
+        P[-1] = {
+        0: [(1.0, -1, 0.0, True)],
+        1: [(1.0, -1, 0.0, True)],
+        2: [(1.0, -1, 0.0, True)],
+        3: [(1.0, -1, 0.0, True)]
+        }
 
         def to_s(row, col):
             return row*ncol + col
@@ -114,15 +107,10 @@ class ClassicGridEnv(discrete.DiscreteEnv):
                 for a in range(nA):
                     li = P[s][a]
                     letter = desc[row, col]
-                    # Terminal state
-                    if letter == b'T':
-                        li.append((1.0, s, 0, True))
-                    # Goal state -> Terminal states
                     if letter == b'G':
-                        li.append((1.0, nS, 1, False))
-                    # Hole state -> Terminal state
+                        li.append((1.0, -1, 1, False))
                     elif letter == b'H':
-                        li.append((1.0, nS, -1, False))
+                        li.append((1.0, -1, -1, False))
                     elif letter == b'X':
                         li.append((0.0, s, 0, False))
                     else:
@@ -134,7 +122,8 @@ class ClassicGridEnv(discrete.DiscreteEnv):
                                     newrow, newcol = row, col
                                     newletter = desc[newrow, newcol]
                                 newstate = to_s(newrow, newcol)
-                                done = bytes(newletter) in b'T'
+                                done = bytes(newletter) in b'GH'
+                                done = False
                                 rew = nrew
                                 li.append((0.8 if b == a else 0.1, newstate, rew, done))
                         else:
@@ -206,57 +195,3 @@ class ClassicGridEnv5x4Dynamic(ClassicGridEnv):
         2: [(1.0, 14, -1.0, False)],
         3: [(1.0, 13, -1.0, False)]
         }
-
-
-if __name__ =='__main__':
-    import pdb
-    from copy import deepcopy
-    from collections import defaultdict
-    from pprint import pprint
-    import sys
-    if "../" not in sys.path:
-        sys.path.append("../")
-
-    import numpy as np
-
-    def policy_evaluation(policy, env, discount_factor=1.0, theta=0.00001):
-        # Start with a random (all 0) value function
-        V = np.zeros(env.nS)
-        while True:
-            delta = 0
-            # For each state, perform a "full backup"
-            for s in range(env.nS):
-                v = 0
-                # Look at the possible next actions
-                for a, action_prob in enumerate(policy[s]):
-                    # For each action, look at the possible next states...
-                    for  prob, next_state, reward, done in env.P[s][a]:
-                        # Calculate the expected value
-                        v += action_prob * prob * (reward + discount_factor * V[next_state])
-                # How much our value function changed (across any states)
-                delta = max(delta, np.abs(v - V[s]))
-                V[s] = v
-            # Stop evaluating once our value function change is below a threshold
-            if delta < theta:
-                break
-        return np.array(V)
-
-    env = ClassicGridEnv3x4(nrew=-0.04)
-    optimal_3x4_policy = np.array([
-        [0.0, 0.0, 1.0, 0.0],
-        [0.0, 0.0, 1.0, 0.0],
-        [0.0, 0.0, 1.0, 0.0],
-        [0.0, 0.0, 1.0, 0.0],
-
-        [0.0, 0.0, 0.0, 1.0],
-        [0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 0.0, 1.0],
-        [0.0, 0.0, 0.0, 1.0],
-
-        [0.0, 0.0, 0.0, 1.0],
-        [1.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 1.0, 0.0],
-        [0.0, 0.0, 0.0, 1.0],
-    ])
-
-    print(policy_evaluation(optimal_3x4_policy, env, discount_factor=1.0).reshape((3,4)))
