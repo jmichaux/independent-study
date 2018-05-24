@@ -65,7 +65,7 @@ class ClassicGridEnv(discrete.DiscreteEnv):
         self.nrow, self.ncol = nrow, ncol = desc.shape
         self.reward_range = (-1, 1)
 
-        nA = 4
+        nA =4
         nS = nrow * ncol
         nS+=1
 
